@@ -19,6 +19,7 @@ const DefaultFocusHead = 0.3
 // Lấy toàn bộ web
 var Website = document.querySelector("body");
 //Biến thay đổi
+var isFocusPassword = false;
 var isHidePassword = true;
 var isPasswordMouseLeave = true;
 // Biến thẻ
@@ -73,15 +74,23 @@ emailInput.onkeydown = () => {
     updatePosition();
 }
 emailInput.onfocus = () => {
+    
+    if(isFocusPassword==false){
+        coverEyes(false);
+    }
     lookAt(DefaultFocusHead);
 }
 emailInput.onblur = () => {
     lookAt(0);
 }
 passwordInput.onfocus = () => {
+    
+    isFocusPassword = true;
     coverEyes(true)
 }
 passwordInput.onblur = () => {
+    
+    isFocusPassword=false;
     if (isPasswordMouseLeave) {
         coverEyes(false);
     }
@@ -92,6 +101,7 @@ passwordGroup.onmouseout = ()=>{
 }
 passwordGroup.onmousemove=()=>{
     isPasswordMouseLeave=false;
+
     
     console.log('enter');
 }
@@ -166,7 +176,10 @@ function updatePosition() {
 
 //Hide password
 document.querySelector('.hidePass').onclick = async () => {
+    
     isHidePassword = !isHidePassword;
+    
+    passwordInput.type = isHidePassword?"password":"text";
     var passwordEye = document.querySelectorAll(".passwordEye");
     await glimpse(!isHidePassword);
     passwordEye.forEach(element => {
