@@ -19,11 +19,12 @@ const DefaultFocusHead = 0.3
 // Lấy toàn bộ web
 var Website = document.querySelector("body");
 //Biến thay đổi
-var isHideClick=false;
+var isHidePassword = true;
 var isPasswordMouseLeave = true;
 // Biến thẻ
 var emailInput = document.getElementById('email');
 var passwordInput = document.getElementById('password');
+var passwordGroup = document.querySelector('.inputG');
 // Tạo hiệu ứng xoay đầu
 
 var tuningHead = gsap.timeline({ defaults: { duration: Website.clientWidth } }),
@@ -45,11 +46,7 @@ tuningHead.to(headNor, { morphSVG: "#head-look" }, "1")
 async function glimpse(isGlimpse) {
     if (isGlimpse) {
         const glimpseUnit = 0.8;
-        turnHead(glimpseUnit);
-        gsap.to(EyeR, CoverDuration, { x: glimpseUnit * EyeMoveX, y: glimpseUnit * EyeMoveY, ease: Expo.easeOut })
-        gsap.to(EyeL, CoverDuration, { x: glimpseUnit * EyeMoveX, y: glimpseUnit * EyeMoveY, ease: Expo.easeOut })
-        gsap.to(Nose, CoverDuration, { x: glimpseUnit * NoseMoveX, y: glimpseUnit * NoseMoveY, ease: Expo.easeOut })
-        gsap.to(Mount, CoverDuration, { x: glimpseUnit * MountMoveX, y: glimpseUnit * MountMoveY, ease: Expo.easeOut })
+        lookAt(glimpseUnit);
     } else {
         const glimpseUnit = 0;
         turnHead(glimpseUnit);
@@ -89,11 +86,14 @@ passwordInput.onblur = () => {
         coverEyes(false);
     }
 }
-passwordInput.onmouseleave = ()=>{
+passwordGroup.onmouseout = ()=>{
+    console.log('leave');
     isPasswordMouseLeave = true;
 }
-passwordInput.onmouseenter=()=>{
+passwordGroup.onmousemove=()=>{
     isPasswordMouseLeave=false;
+    
+    console.log('enter');
 }
 // Tạo hiệu ứng chuyển động khi di chuột
 function lookAt(progress) {
@@ -166,9 +166,9 @@ function updatePosition() {
 
 //Hide password
 document.querySelector('.hidePass').onclick = async () => {
+    isHidePassword = !isHidePassword;
     var passwordEye = document.querySelectorAll(".passwordEye");
-    coverEyes(true);
-    await glimpse(true);
+    await glimpse(!isHidePassword);
     passwordEye.forEach(element => {
         element.classList.toggle('hide');
     });
